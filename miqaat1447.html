@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ongoing Miqaats</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 10px;
+    }
+    .miqaat {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ongoing Miqaats</h1>
+  <div id="miqaats">Loading...</div>
+
+  <script>
+    fetch('https://godhrajamaat.onrender.com/api/miqaats/ongoing')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        const container = document.getElementById('miqaats');
+        container.innerHTML = '';  // Clear loading message
+
+        data.forEach(miqaat => {
+          const div = document.createElement('div');
+          div.classList.add('miqaat');
+          div.innerHTML = `
+            <h3>${miqaat.name}</h3>
+            <p>Date: ${new Date(miqaat.date).toLocaleString()}</p>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        const container = document.getElementById('miqaats');
+        container.innerText = "Error fetching miqaats: " + err.message;
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
+
